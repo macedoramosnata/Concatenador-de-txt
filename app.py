@@ -31,11 +31,16 @@ if uploaded_file is not None:
         else:
             resultado_final = ""
             for i, arquivo in enumerate(arquivos_txt):
-                with open(arquivo, 'r', encoding='utf-8') as file:
-                    conteudo = file.read()
-                    if i != 0:
-                        resultado_final += "\n"
-                    resultado_final += conteudo
+                try:
+                    with open(arquivo, 'r', encoding='utf-8') as file:
+                        conteudo = file.read()
+                except UnicodeDecodeError:
+                    with open(arquivo, 'r', encoding='latin1') as file:
+                        conteudo = file.read()
+
+                if i != 0:
+                    resultado_final += "\n"
+                resultado_final += conteudo
 
             # Exibe o conteúdo
             st.success(f"✅ {len(arquivos_txt)} arquivos .txt foram unidos com sucesso.")
